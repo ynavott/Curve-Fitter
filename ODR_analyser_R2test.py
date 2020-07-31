@@ -25,7 +25,7 @@ dY = df.dY
 # endregion
 
 # Initial Guess for parameters
-guess = (0.5, 0.9)
+guess = (1, 0)
 
 # Plot Residuals
 plot_residuals = False
