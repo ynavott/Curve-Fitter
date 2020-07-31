@@ -7,6 +7,13 @@ from scipy import stats
 from scipy.odr import *
 # endregion
 
+# matplotlib font
+font = {'family': 'Times New Roman',
+        'color': 'black',
+        'weight': 'normal',
+        'size': 16,
+        }
+
 # Read .csv file with data and define values
 # region
 df = pd.read_csv('Data.csv', header=0)
@@ -18,7 +25,7 @@ dY = df.dY
 # endregion
 
 # Initial Guess for parameters
-guess = (1, 0)
+guess = (0.5, 0.9)
 
 # Plot Residuals
 plot_residuals = False
@@ -84,29 +91,31 @@ if calc_r2_check:
 
 # Create subplots
 plt.style.use(plot_style)
-fig, ax = plt.subplots(figsize=(10, 8))
+fig, ax = plt.subplots(figsize=(6.5, 5))
 
 if plot_residuals:
-    ax.set_ylabel(dY_label)
+    ax.set_ylabel(dY_label, fontdict=font)
 else:
-    ax.set_ylabel(y_label)
+    ax.set_ylabel(y_label, fontdict=font)
 
 xFit = np.linspace(x.iloc[0], x.iloc[-1], num=10000)
 y1 = tuple(func(popt, float(xFit[i])) for i in range(len(xFit)))
 y2 = tuple(func(popt, float(x[i])) for i in range(len(x)))
-if not plot_residuals: solution = plt.plot(xFit, y1, 'r', zorder=2)
-else: solution = plt.plot((x[0], x[len(x)-1]), (0, 0), 'r', zorder=2)
+if not plot_residuals:
+    solution = plt.plot(xFit, y1, 'k', zorder=2)
+else:
+    solution = plt.plot((x[0], x[len(x)-1]), (0, 0), 'k', zorder=2)
 # endregion
 
 # region - Errorbar plots
 if plot_residuals:
     dat = plt.errorbar(x, y - y2,
                        xerr=dX, yerr=dY,
-                       fmt='b.', zorder=0, elinewidth=0.7, capsize=1.5)
+                       fmt='k.', ms=4, zorder=0, elinewidth=0.7, capsize=1.5)
 else:
     dat = plt.errorbar(x, y,
                        xerr=dX, yerr=dY,
-                       fmt='b.', zorder=0, elinewidth=0.7, capsize=1.5)
+                       fmt='k.', ms=4, zorder=0, elinewidth=0.7, capsize=1.5)
 # endregion
 
 # region - Printing
@@ -126,13 +135,13 @@ if calc_r2_check:
 # endregion
 
 # region - Showing
-ax.set_xlabel(x_label)
 
-ax.set_title(title)
+ax.set_xlabel(x_label, fontdict=font)
 
-ax.yaxis.label.set_size(16)
-ax.xaxis.label.set_size(16)
-ax.title.set_size(18)
+ax.set_title(title, fontdict=font)
+
+ax.yaxis.label.set_size(12)
+ax.xaxis.label.set_size(12)
 plt.tight_layout()
 
 plt.show()
