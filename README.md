@@ -1,4 +1,5 @@
 # Curve Fitter
+[![DOI](https://zenodo.org/badge/284038535.svg)](https://zenodo.org/badge/latestdoi/284038535)
 ## Introduction
 This is my curve-fitting script that can be used to fit all kinds of curves to a set of 2 variables with error using orthogonal distance regression (ODR).
 ## Using the script (not residual plot)
