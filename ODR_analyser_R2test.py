@@ -5,18 +5,20 @@ import math
 import pandas as pd
 from scipy import stats
 from scipy.odr import *
+
 # endregion
 
 # matplotlib font
-font = {'family': 'Times New Roman',
-        'color': 'black',
-        'weight': 'normal',
-        'size': 16,
-        }
+font = {
+    "family": "Times New Roman",
+    "color": "black",
+    "weight": "normal",
+    "size": 16,
+}
 
 # Read .csv file with data and define values
 # region
-df = pd.read_csv('Data.csv', header=0)
+df = pd.read_csv("Data.csv", header=0)
 print(df)
 x = df.X
 dX = df.dX
@@ -40,15 +42,18 @@ y_label = ""
 dY_label = ""
 
 # Plot Style
-plot_style = 'seaborn-white'
+plot_style = "seaborn-white"
 
 
 # region - Curve Fitting Function
 
+
 def func(p, x):
     a1, a2 = p
 
-    return a1*x + a2
+    return a1 * x + a2
+
+
 # endregion
 
 # region - ODR
@@ -70,7 +75,7 @@ popt = tuple(ODRfit.beta)
 pcov = np.diag(ODRfit.cov_beta)
 perr = tuple(math.sqrt(pcov[i]) for i in range(len(pcov)))
 redchisq = ODRfit.res_var
-chisq = redchisq*dof
+chisq = redchisq * dof
 pval = stats.chi2.sf(chisq, dof)
 # endregion
 
@@ -80,10 +85,11 @@ if calc_r2_check:
     def calc_r2():
 
         rss = chisq
-        tss_i = tuple((y[i]-np.mean(y))**2 for i in range(len(y)))
+        tss_i = tuple((y[i] - np.mean(y)) ** 2 for i in range(len(y)))
         tss = np.sum(tss_i)
-        R2_value = 1-(rss/tss)
+        R2_value = 1 - (rss / tss)
         return R2_value
+
     R2 = calc_r2()
 # endregion
 
@@ -102,20 +108,28 @@ xFit = np.linspace(x.iloc[0], x.iloc[-1], num=10000)
 y1 = tuple(func(popt, float(xFit[i])) for i in range(len(xFit)))
 y2 = tuple(func(popt, float(x[i])) for i in range(len(x)))
 if not plot_residuals:
-    solution = plt.plot(xFit, y1, 'k', zorder=2)
+    solution = plt.plot(xFit, y1, "k", zorder=2)
 else:
-    solution = plt.plot((x[0], x[len(x)-1]), (0, 0), 'k', zorder=2)
+    solution = plt.plot((x[0], x[len(x) - 1]), (0, 0), "k", zorder=2)
 # endregion
 
 # region - Errorbar plots
 if plot_residuals:
-    dat = plt.errorbar(x, y - y2,
-                       xerr=dX, yerr=dY,
-                       fmt='k.', ms=4, zorder=0, elinewidth=0.7, capsize=1.5)
+    dat = plt.errorbar(
+        x,
+        y - y2,
+        xerr=dX,
+        yerr=dY,
+        fmt="k.",
+        ms=4,
+        zorder=0,
+        elinewidth=0.7,
+        capsize=1.5,
+    )
 else:
-    dat = plt.errorbar(x, y,
-                       xerr=dX, yerr=dY,
-                       fmt='k.', ms=4, zorder=0, elinewidth=0.7, capsize=1.5)
+    dat = plt.errorbar(
+        x, y, xerr=dX, yerr=dY, fmt="k.", ms=4, zorder=0, elinewidth=0.7, capsize=1.5
+    )
 # endregion
 
 # region - Printing
@@ -125,7 +139,7 @@ for i in range(len(guess)):
 
 print("Fitted Parameter Values: ")
 for i in range(len(popt)):
-    print(popt[i], "±", perr[i], "({}%)".format((perr[i]/popt[i])*100))
+    print(popt[i], "±", perr[i], "({}%)".format((perr[i] / popt[i]) * 100))
 print("Chi squared (not reduced):", chisq)
 print("Degrees of Freedom:", dof)
 print("Reduced Chi squared:", redchisq)
