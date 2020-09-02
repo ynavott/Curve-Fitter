@@ -24,3 +24,4 @@ pip-selfcheck.json
 .vscode/*
 *.code-workspace
 setup.cfg
+.vim/*
